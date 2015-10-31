@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">DataTransferTest</string>
+
+    <!-- MenuActivity strings -->
+    <string name="welcome_string">WELCOME</string>
+    <string name="single_value_activity_string">Single value activity</string>
+    <string name="multi_value_activity_string">Multi value activity</string>
+    <string name="enter_text_string">Enter some text to send to the activity</string>
+
+    <!-- SingleActivity strings -->
+    <string name="single_value_input_string">Input a single string value.</string>
+    <string name="submit_string">Submit</string>
+
+    <!-- MultiActivity strings -->
+</resources>

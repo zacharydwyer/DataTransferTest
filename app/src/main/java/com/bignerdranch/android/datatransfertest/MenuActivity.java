@@ -3,7 +3,6 @@ package com.bignerdranch.android.datatransfertest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.preference.DialogPreference;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,8 +11,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class MenuActivity extends AppCompatActivity {
-    // Used by inner class that handles button presses that determine if the user wants to continue, only call after checkEditText...
-    private boolean mContinueRunningProgram;
+
+    // Tag
+    private final String TAG = "MenuActivity";
 
     // Widgets
     private Button mStartSingleValueActivityButton;
@@ -40,17 +40,7 @@ public class MenuActivity extends AppCompatActivity {
         mStartSingleValueActivityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                // Was there data input into the EditText?
-                checkEditText();
-
-                // The above method sets mContinueRunningProgram to an appropriate value based on the edit text and the result of the yes/no dialog if the edit text is blank
-
-                // If we want to go ahead and start the activity
-                if(mContinueRunningProgram) {
-                    Intent intentToStartSingleActivity = SingleActivity.createIntent(MenuActivity.this, mTextToSendToActivityEditText.getText().toString());      // Create intent for singleActivity, send it the text you wanted to send it
-                    startActivityForResult(intentToStartSingleActivity, REQUEST_CODE_SINGLE_ACTIVITY);                                                  // Start activity for a result
-                }
+                handleStartingSingleActivity();
             }
         });
 
@@ -63,8 +53,8 @@ public class MenuActivity extends AppCompatActivity {
         });
     }
 
-    // Checks if the Edit Text is empty or not - if empty, ask if they want to continue, set result to mContinueRunning
-    private void checkEditText() {
+    // Handles starting the single activity
+    private void handleStartingSingleActivity() {
 
         // If the text in the "text to send to activity edittext" is empty...
         if (mTextToSendToActivityEditText.getText().toString().trim().isEmpty()) {
@@ -80,7 +70,11 @@ public class MenuActivity extends AppCompatActivity {
             alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    mContinueRunningProgram = true;
+
+                    // Start the activity
+                    startSingleActivity();
+
+                    // Dimiss dialog
                     dialog.dismiss();
                 }
             });
@@ -89,7 +83,8 @@ public class MenuActivity extends AppCompatActivity {
             alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    mContinueRunningProgram = false;
+
+                    // Dismiss dialog
                     dialog.dismiss();
                 }
             });
@@ -101,9 +96,19 @@ public class MenuActivity extends AppCompatActivity {
             alertDialog.show();
         }
         else {
-            // Edit text is not blank.
-            mContinueRunningProgram = true;
+            // Just start the activity without the dialog
+            startSingleActivity();
         }
+    }
+
+    // Actually start the single activity - called from handleStartingSingleActivity
+    private void startSingleActivity() {
+
+        // Create intent for singleActivity, send it the text you wanted to send it
+        Intent intentToStartSingleActivity = SingleActivity.createIntent(MenuActivity.this, mTextToSendToActivityEditText.getText().toString());
+
+        // Start activity for a result
+        startActivityForResult(intentToStartSingleActivity, REQUEST_CODE_SINGLE_ACTIVITY);
     }
 
     // Handle what happens when this Activity is given a result
